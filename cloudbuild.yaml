@@ -1,16 +1,22 @@
-steps:
-- name: 'gcr.io/k8s-skaffold/pack'
-  entrypoint: 'pack'
-  args: ['build',
-         '--builder=gcr.io/buildpacks/builder',
-         '--publish', 'northamerica-northeast1-docker.pkg.dev/sc-dso-dev/sc-docker-repository/hello-world:$BUILD_ID']
-  id: Build and package java and spring boot app
-- name: gcr.io/google.com/cloudsdktool/cloud-sdk:slim
-  args: 
-      [
-        "deploy", "releases", "create", "release-1",
-        "--delivery-pipeline", "sc-cloud-run-pipeline",
-        "--region", "northamerica-northeast1",
-        "--images", "app=northamerica-northeast1-docker.pkg.dev/sc-dso-dev/sc-docker-repository/hello-world:$BUILD_ID"
-      ]
-  entrypoint: gcloud
+  steps:
+  - name: 'gcr.io/cloud-builders/docker'
+    entrypoint: 'bash'
+    args: ['-c', 'docker pull northamerica-northeast1-docker.pkg.dev/sc-dso-dev/sc-docker-repository/hello-world:latest || exit 0']
+  - name: 'gcr.io/cloud-builders/docker'
+    args: [
+              'build',
+              '-t', 'northamerica-northeast1-docker.pkg.dev/sc-dso-dev/sc-docker-repository/hello-world:latest',
+              '--cache-from', 'northamerica-northeast1-docker.pkg.dev/sc-dso-dev/sc-docker-repository/sc-docker-repo/hello-world:latest',
+              '.'
+          ]
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'northamerica-northeast1-docker.pkg.dev/sc-dso-dev/sc-docker-repository/hello-world:latest']
+  - name: gcr.io/google.com/cloudsdktool/cloud-sdk:slim
+    args: 
+        [
+          "deploy", "releases", "create", "release-81",
+          "--delivery-pipeline", "sc-cloud-run-pipeline",
+          "--region", "northamerica-northeast1",
+          "--images", "app=northamerica-northeast1-docker.pkg.dev/sc-dso-dev/sc-docker-repository/hello-world:latest"
+        ]
+    entrypoint: gcloud
