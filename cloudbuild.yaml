@@ -1,35 +1,16 @@
 steps:
-  - name: 'gcr.io/cloud-builders/docker'
-    args:
+- name: 'gcr.io/k8s-skaffold/pack'
+  entrypoint: 'pack'
+  args: ['build',
+         '--builder=gcr.io/buildpacks/builder',
+         '--publish', 'northamerica-northeast1-docker.pkg.dev/sc-dso-dev/sc-docker-repository/hello-world:$BUILD_ID']
+  id: Build and package java and spring boot app
+- name: gcr.io/google.com/cloudsdktool/cloud-sdk:slim
+  args: 
       [
-        'build',
-        '-t',
-        'gcr.io/$PROJECT_ID/${_SERVICE_NAME}:$SHORT_SHA',
-        '.',
+        "deploy", "releases", "create", "release-1",
+        "--delivery-pipeline", "sc-cloud-run-pipeline",
+        "--region", "northamerica-northeast1",
+        "--images", "app=northamerica-northeast1-docker.pkg.dev/sc-dso-dev/sc-docker-repository/hello-world:$BUILD_ID"
       ]
-  - name: 'gcr.io/cloud-builders/docker'
-    args:
-      [
-        'push',
-        'gcr.io/$PROJECT_ID/${_SERVICE_NAME}:$SHORT_SHA',
-      ]
-  - name: 'gcr.io/cloud-builders/gcloud'
-    args:
-      [
-        'beta',
-        'run',
-        'deploy',
-        '${_SERVICE_NAME}',
-        '--image=gcr.io/$PROJECT_ID/${_SERVICE_NAME}:$SHORT_SHA',
-        '--region=${_LOCATION}',
-      ]
-  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk' 
-    entrypoint: 'bash'
-    args:
-    - '-c'
-    - > 
-      gcloud deploy releases create release-$BUILD_ID --delivery-pipeline=hello-world-app --region=northamerica-northeast1 --source=./
-      --images=hello-world-app=gcr.io/$PROJECT_ID/${_SERVICE_NAME}:$SHORT_SHA   
-substitutions:
-  _SERVICE_NAME: hello-world-service
-  _LOCATION: northeast-northamerica1
+  entrypoint: gcloud
