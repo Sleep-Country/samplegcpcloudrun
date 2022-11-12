@@ -2,6 +2,8 @@
   - name: 'gcr.io/cloud-builders/docker'
     entrypoint: 'bash'
     args: ['-c', 'docker pull northamerica-northeast1-docker.pkg.dev/sc-dso-dev/sc-docker-repository/hello-world:latest || exit 0']
+    options:
+      logging: CLOUD_LOGGING_ONLY
   - name: 'gcr.io/cloud-builders/docker'
     args: [
               'build',
@@ -9,8 +11,12 @@
               '--cache-from', 'northamerica-northeast1-docker.pkg.dev/sc-dso-dev/sc-docker-repository/sc-docker-repo/hello-world:latest',
               '.'
           ]
+    options:
+      logging: CLOUD_LOGGING_ONLY      
   - name: 'gcr.io/cloud-builders/docker'
     args: ['push', 'northamerica-northeast1-docker.pkg.dev/sc-dso-dev/sc-docker-repository/hello-world:latest']
+    options:
+      logging: CLOUD_LOGGING_ONLY
   - name: gcr.io/google.com/cloudsdktool/cloud-sdk:slim
     args: 
         [
@@ -19,6 +25,6 @@
           "--region", "northamerica-northeast1",
           "--images", "app=northamerica-northeast1-docker.pkg.dev/sc-dso-dev/sc-docker-repository/hello-world:latest"
         ]
-    entrypoint: gcloud
     options:
-      logging: CLOUD_LOGGING_ONLY
+      logging: CLOUD_LOGGING_ONLY   
+    entrypoint: gcloud
