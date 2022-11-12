@@ -20,3 +20,5 @@
           "--images", "app=northamerica-northeast1-docker.pkg.dev/sc-dso-dev/sc-docker-repository/hello-world:latest"
         ]
     entrypoint: gcloud
+    options:
+      logging: CLOUD_LOGGING_ONLY
