@@ -14,7 +14,7 @@
   - name: gcr.io/google.com/cloudsdktool/cloud-sdk:slim
     args: 
         [
-          "deploy","releases", "create", "release-91",
+          "deploy","releases", "create", "release-92",
           "--delivery-pipeline", "sc-cloud-run-pipeline",
           "--region", "northamerica-northeast1",
           "--images", "app=northamerica-northeast1-docker.pkg.dev/sc-dso-dev/sc-docker-repository/hello-world:latest"
@@ -23,7 +23,7 @@
   - name: gcr.io/google.com/cloudsdktool/cloud-sdk:slim
     args: 
         [
-          "deploy","releases", "promote", "release-91",
+          "deploy","releases", "promote", "release-92",
           "--delivery-pipeline", "sc-cloud-run-pipeline",
           "--region", "northamerica-northeast1",
         ]     
