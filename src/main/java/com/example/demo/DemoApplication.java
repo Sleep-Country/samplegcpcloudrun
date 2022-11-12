@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class DemoApplication {
 
 	
-	  @Value("${NAME:SC World}")
+	  @Value("${NAME:SleepCoutnry World}")
 	  String name;
 
 	  @RestController
