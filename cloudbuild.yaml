@@ -1,30 +1,30 @@
   steps:
   - name: 'gcr.io/cloud-builders/docker'
     entrypoint: 'bash'
-    args: ['-c', 'docker pull northamerica-northeast1-docker.pkg.dev/sc-dso-dev/sc-docker-repository/hello-world:latest || exit 0']
+    args: ['-c', 'docker pull northamerica-northeast1-docker.pkg.dev/sc-dso-dev/sc-docker-repository/hello-world:$BUILD_ID || exit 0']
   - name: 'gcr.io/cloud-builders/docker'
     args: [
               'build',
               '-t', 'northamerica-northeast1-docker.pkg.dev/sc-dso-dev/sc-docker-repository/hello-world:latest',
-              '--cache-from', 'northamerica-northeast1-docker.pkg.dev/sc-dso-dev/sc-docker-repository/sc-docker-repo/hello-world:latest',
+              '--cache-from', 'northamerica-northeast1-docker.pkg.dev/sc-dso-dev/sc-docker-repository/sc-docker-repo/hello-world:$BUILD_ID',
               '.'
           ]    
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['push', 'northamerica-northeast1-docker.pkg.dev/sc-dso-dev/sc-docker-repository/hello-world:latest']
+    args: ['push', 'northamerica-northeast1-docker.pkg.dev/sc-dso-dev/sc-docker-repository/hello-world:$BUILD_ID']
   - name: gcr.io/google.com/cloudsdktool/cloud-sdk:slim
     args: 
         [
-          "deploy","releases", "create", "release-93",
+          "deploy","releases", "create", "release-$SHORT_SHA",
           "--delivery-pipeline", "sc-cloud-run-pipeline",
           "--region", "northamerica-northeast1",
-          "--images", "app=northamerica-northeast1-docker.pkg.dev/sc-dso-dev/sc-docker-repository/hello-world:latest"
+          "--images", "app=northamerica-northeast1-docker.pkg.dev/sc-dso-dev/sc-docker-repository/hello-world:$BUILD_ID"
         ]
     entrypoint: gcloud    
   - name: gcr.io/google.com/cloudsdktool/cloud-sdk:slim
     args: 
         [
           "deploy","releases", "promote", 
-          "--release","release-93",
+          "--release","release-$SHORT_SHA",
           "--to-target","dev-env",
           "--delivery-pipeline", "sc-cloud-run-pipeline",
           "--region", "northamerica-northeast1",
