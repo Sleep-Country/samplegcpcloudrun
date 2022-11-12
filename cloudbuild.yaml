@@ -25,7 +25,7 @@
         [
           "deploy","releases", "promote", 
           "--release","release-93",
-          "--to-target","dev-env"
+          "--to-target","dev-env",
           "--delivery-pipeline", "sc-cloud-run-pipeline",
           "--region", "northamerica-northeast1",
         ]     
