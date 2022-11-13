@@ -5,7 +5,7 @@
   - name: 'gcr.io/cloud-builders/docker'
     args: [
               'build',
-              '-t', 'northamerica-northeast1-docker.pkg.dev/sc-dso-dev/sc-docker-repository/hello-world:latest',
+              '-t', 'northamerica-northeast1-docker.pkg.dev/sc-dso-dev/sc-docker-repository/$REPO_NAME:latest',
               '--cache-from', 'northamerica-northeast1-docker.pkg.dev/sc-dso-dev/sc-docker-repository/sc-docker-repo/$REPO_NAME:latest',
               '.'
           ]    
