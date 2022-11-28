@@ -1,1 +1,1 @@
-This repo contains the cloudbuild and cloud deploy pipeline.
+This repo contains the cloudbuild and cloud deploy pipeline
